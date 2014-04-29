@@ -14,7 +14,7 @@ dateArray = []
 dateObject = ['','']
 
 
-file2 = open('myJson.json', 'w')
+file2 = open('sorted.json', 'w')
 for line in infile:
 	line.strip()
 	if not (line.find("|2014-")==-1):
@@ -30,6 +30,7 @@ for line in infile:
 		dateArray.append(dates2)
 		#print '\n'
 
+newlist = sorted(dateArray, key=lambda k: k[0]) 
 
 for dates2 in dateArray:
 	print dates2
@@ -39,7 +40,7 @@ for dates2 in dateArray:
 	#print dateArray
 	#for data in dateArray:
 	#	print data
-for dates2 in dateArray:
+for dates2 in newlist:
 
 	x  = json.dumps(dates2)
 	file2.write(x)
