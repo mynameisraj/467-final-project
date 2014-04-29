@@ -13,30 +13,39 @@ dateArray = []
 
 dateObject = ['','']
 
+
+file2 = open('myJson.json', 'w')
 for line in infile:
 	line.strip()
-	if not (line.find("|2014")==-1):
+	if not (line.find("|2014-")==-1):
 		
 		splitIndex = line.find("|2014") #find out where to split the damn string
+		splitIndex2 = line.find("|")
 		
-		dateArrayIndex_date = line[splitIndex+1:] #copy date into a var
-		dateArrayIndex_url = line[0:splitIndex]	#copy url into a var
+		dateArrayIndex_date = line[splitIndex+1:splitIndex+20] #copy date into a var
+		dateArrayIndex_url = line[0:splitIndex2]	#copy url into a var
 		
 		#append both url and date vars into one 'dates' obj  
-		dates.append(dateArrayIndex_date)
-		dates.append(dateArrayIndex_url)
+		dates2 = dateArrayIndex_date, dateArrayIndex_url
+		dateArray.append(dates2)
+		#print '\n'
 
+
+for dates2 in dateArray:
+	print dates2
 
 		#'dateArray' is an array of 'dates' objects
-		dateArray.append(dates)
+	
+	#print dateArray
+	#for data in dateArray:
+	#	print data
+for dates2 in dateArray:
 
-for data in dateArray:
-	print data, '\n'
+	x  = json.dumps(dates2)
+	file2.write(x)
 
 
-
-
-'''for dat in dateArray:
+'''for data in dateArray:
 	print dateArray
 	print '\n'
 		#dateArray is where all your dates and URLs are stored in the format ['date','url']
