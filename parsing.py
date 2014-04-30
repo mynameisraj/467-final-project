@@ -19,7 +19,7 @@ for line in infile:
 	line.strip()
 	if not (line.find("|2014-")==-1):
 		
-		splitIndex = line.find("|2014") #find out where to split the damn string
+		splitIndex = line.find("|2014-") #find out where to split the damn string
 		splitIndex2 = line.find("|")
 		
 		dateArrayIndex_dateTime = line[splitIndex+1:splitIndex+20] #copy date into a var
@@ -31,15 +31,14 @@ for line in infile:
 		#print dateArrayIndex_justDate
 
 		if not (dateArrayIndex_justDate in myDict):
-			myDict[dateArrayIndex_justDate] = [] 
+			myDict[dateArrayIndex_justDate] = {} 
 
-		myDict[dateArrayIndex_justDate].append(myTuple)
+		myDict[dateArrayIndex_justDate][dateArrayIndex_justTime] = dateArrayIndex_url
 
 		#append both url and date vars into one 'dates' obj  
 		#dates2 = dateArrayIndex_dateTime, dateArrayIndex_url
 		#dateArray.append(dates2)
 		#print '\n'
-print myDict
 
 #for x in myDict:
 	#print x + str(myDict[x])
@@ -51,7 +50,9 @@ print myDict
 	#	print data
 
 d  = json.dumps(myDict, indent=2)
-file2.write(d + "\n")
+print d
+file2.write(d)
+file2.close()
 
 
 '''for data in dateArray:
