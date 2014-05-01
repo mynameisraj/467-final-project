@@ -31,15 +31,20 @@ var events;
 d3.json("data.json", function(error, json) {
   if (error) return console.warn(error);
   history = json;
-  d3.json("sample_calendar_data.json", function(error, json) {
+  d3.json("calendar_events.json", function(error, json) {
     if (error) return console.warn(error);
-    events = json["items"];
+    events = json["data"];
     for(var calevent in events){
-      var start = moment(events[calevent]['start']['dateTime']).unix();
-      var end = moment(events[calevent]['end']['dateTime']).unix();
-      for(var i = start; i<end; i+=10){
-        if()
+      var start = moment(events[calevent]['start']).unix();
+      var end = moment(events[calevent]['end']).unix();
+      var count = 0;
+      for(var i = start; i<end; i++){
+        if(history[i+".0"]){
+          console.log(history[i+".0"]);
+          count++;
+        }
       }
+      console.log(count);
     }
 
   });
