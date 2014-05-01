@@ -88,7 +88,7 @@ d3.json("data.json", function(error, json) {
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var count = 10;
+      var count = Math.floor(Math.random()*10 + 1);
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
           count++;
