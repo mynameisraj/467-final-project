@@ -17,7 +17,7 @@ dateArray = []
 dateObject = ['','']
 myDict = {}
 
-file2 = open('myJson_test.json', 'w')
+file2 = open('data.json', 'w')
 for line in infile:
     line.strip()
     if not (line.find("|2014-")==-1):
