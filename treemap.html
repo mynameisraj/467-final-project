@@ -31,9 +31,12 @@ form {
 <script src="moment.min.js"></script>
 <script>
 
-function get_color() {
+var hash = [];
+function get_color(d) {
+  if (hash[d] != undefined) { return hash[d]; }
   var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC"];
   var index = Math.round(Math.random()*(colors.length - 1))
+  hash[d] = colors[index];
   return colors[index];
 
 }
@@ -84,7 +87,7 @@ d3.json("data.json", function(error, json) {
     .enter().append("div")
       .attr("class", "node")
       .call(position)
-      .style("background", function(d) { return d.children ? null : get_color(); })
+      .style("background", function(d) { return d.children ? null : get_color(d.name); })
       .text(function(d) { return d.children ? null : d.name + " (" + d.size + " sites visited)"; });
 
   d3.selectAll("input").on("change", function change() {
