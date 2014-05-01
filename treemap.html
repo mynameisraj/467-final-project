@@ -1,32 +1,62 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-path {
-  stroke: white;
-  stroke-width: 0.25px;
-  fill: grey;
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
 }
 
-.q0-9 { fill:rgb(255,219,176); }
-.q1-9 { fill:rgb(255,196,125); }
-.q2-9 { fill:rgb(249,163,50); }
-.q3-9 { fill:rgb(247,147,30); }
-.q4-9 { fill:rgb(239,112,48); }
-.q5-9 { fill:rgb(237,92,20); }
-.q6-9 { fill:rgb(234,64,31); }
-.q7-9 { fill:rgb(198,50,16); }
-.q8-9 { fill:rgb(183,27,15); }
-
-.btn-group{
-  padding: 10px 0;
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
+
+.node {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+
 </style>
 <body>
+
 <script src="d3.v3.min.js"></script>
 <script src="moment.min.js"></script>
 <script>
+
+function get_color() {
+  var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC"];
+  var index = Math.round(Math.random()*(colors.length - 1))
+  return colors[index];
+
+}
+
+var margin = {top: 40, right: 10, bottom: 10, left: 10},
+    width = 960 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
+
+var treemap = d3.layout.treemap()
+    .size([width, height])
+    .sticky(true)
+    .value(function(d) { return d.size; });
+
+var div = d3.select("body").append("div")
+    .style("position", "relative")
+    .style("width", (width + margin.left + margin.right) + "px")
+    .style("height", (height + margin.top + margin.bottom) + "px")
+    .style("left", margin.left + "px")
+    .style("top", margin.top + "px");
+
 var history; // a global
 var events;
+var dictionary = {"name":"Events", "children" : []};
 
 d3.json("data.json", function(error, json) {
   if (error) return console.warn(error);
@@ -34,20 +64,49 @@ d3.json("data.json", function(error, json) {
   d3.json("calendar_events.json", function(error, json) {
     if (error) return console.warn(error);
     events = json["data"];
+    console.log(json);
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var count = 0;
+      var count = 10;
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
-          console.log(history[i+".0"]);
           count++;
         }
       }
-      console.log(count);
+      dictionary["children"].push({"name":events[calevent]['title'], "size":count})
     }
 
+    console.log(dictionary);
+
+    var node = div.datum(dictionary).selectAll(".node")
+      .data(treemap.nodes)
+    .enter().append("div")
+      .attr("class", "node")
+      .call(position)
+      .style("background", function(d) { return d.children ? null : get_color(); })
+      .text(function(d) { return d.children ? null : d.name + " (" + d.size + " sites visited)"; });
+
+  d3.selectAll("input").on("change", function change() {
+    var value = this.value === "count"
+        ? function() { return 1; }
+        : function(d) { return d.size; };
+
+    node
+        .data(treemap.value(value).nodes)
+      .transition()
+        .duration(1500)
+        .call(position);
   });
+  });
+
+
+function position() {
+  this.style("left", function(d) { return d.x + "px"; })
+      .style("top", function(d) { return d.y + "px"; })
+      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+}
 
 });
 </script>

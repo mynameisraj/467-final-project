@@ -83,7 +83,7 @@ def main(argv):
 
   calJSON = []
 
-  min_time = '2014-04-28T17:15:00-06:00'
+  min_time = '2014-04-20T17:15:00-06:00'
   max_time = '2014-05-01T17:15:00-06:00'
 
   count = 0
@@ -95,8 +95,9 @@ def main(argv):
       for event in events['items']:
         event_dupe = {}
         event_dupe['title'] = event['summary']
-        event_dupe['start'] = event['start']['dateTime']
-        event_dupe['end'] = event['end']['dateTime']
+        if 'dateTime' in event['start'] and 'dateTime' in event['end']:
+          event_dupe['start'] = event['start']['dateTime']
+          event_dupe['end'] = event['end']['dateTime']
         calJSON.append(event_dupe)
         count = count + 1
       page_token = events.get('nextPageToken')
