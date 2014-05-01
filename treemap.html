@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+path {
+  stroke: white;
+  stroke-width: 0.25px;
+  fill: grey;
+}
+
+.q0-9 { fill:rgb(255,219,176); }
+.q1-9 { fill:rgb(255,196,125); }
+.q2-9 { fill:rgb(249,163,50); }
+.q3-9 { fill:rgb(247,147,30); }
+.q4-9 { fill:rgb(239,112,48); }
+.q5-9 { fill:rgb(237,92,20); }
+.q6-9 { fill:rgb(234,64,31); }
+.q7-9 { fill:rgb(198,50,16); }
+.q8-9 { fill:rgb(183,27,15); }
+
+.btn-group{
+  padding: 10px 0;
+}
+</style>
+<body>
+<script src="d3.v3.min.js"></script>
+<script src="moment.min.js"></script>
+<script>
+var history; // a global
+var events;
+
+d3.json("myJson_test.json", function(error, json) {
+  if (error) return console.warn(error);
+  history = json;
+  d3.json("sample_calendar_data.json", function(error, json) {
+    if (error) return console.warn(error);
+    events = json["items"];
+    for(var calevent in events){
+      var start = moment(events[calevent]['start']['dateTime']).unix();
+      var end = moment(events[calevent]['end']['dateTime']).unix();
+      for(var i = start; i<end; i+=10){
+        console.log(i);
+      }
+    }
+
+  });
+
+});
+</script>
+</body>
+</html>
