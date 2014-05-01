@@ -28,7 +28,7 @@ path {
 var history; // a global
 var events;
 
-d3.json("myJson_test.json", function(error, json) {
+d3.json("data.json", function(error, json) {
   if (error) return console.warn(error);
   history = json;
   d3.json("sample_calendar_data.json", function(error, json) {
@@ -38,7 +38,7 @@ d3.json("myJson_test.json", function(error, json) {
       var start = moment(events[calevent]['start']['dateTime']).unix();
       var end = moment(events[calevent]['end']['dateTime']).unix();
       for(var i = start; i<end; i+=10){
-        console.log(i);
+        if()
       }
     }
 
