@@ -81,17 +81,17 @@ var history; // a global
 var events;
 var dictionary = {"name":"Events", "children" : []};
 
-d3.json("data.json", function(error, json) {
+d3.json("data_mayank.json", function(error, json) {
   if (error) return console.warn(error);
   history = json;
-  d3.json("calendar_events.json", function(error, json) {
+  d3.json("calendar_events.json", function(error, json2) {
     if (error) return console.warn(error);
-    events = json["data"];
-    console.log(json);
+    events = json2["data"];
+    console.log(json2);
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var count = Math.floor(Math.random()*10 + 1);
+      var count = 0;
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
           count++;

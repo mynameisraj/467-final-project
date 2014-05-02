@@ -5,7 +5,7 @@ from datetime import datetime
 import dateutil.parser
 import time
 
-infile = open('urls.txt', 'r')
+infile = open('urls_mayank.txt', 'r')
 print("the file has succesfully opened")
 
 '''i = 1
@@ -17,7 +17,7 @@ dateArray = []
 dateObject = ['','']
 myDict = {}
 
-file2 = open('data.json', 'w')
+file2 = open('data_mayank.json', 'w')
 for line in infile:
     line.strip()
     if not (line.find("|2014-")==-1):
