@@ -1,12 +1,6 @@
 {
   "data": [
     {
-      "title": "Last day of exams"
-    }, 
-    {
-      "title": "TJ Hackathon"
-    }, 
-    {
       "start": "2013-04-30T18:00:00-05:00", 
       "end": "2013-04-30T21:00:00-05:00", 
       "title": "CS 225 Honors"
@@ -15,9 +9,6 @@
       "start": "2013-03-04T22:15:00-06:00", 
       "end": "2013-03-04T23:00:00-06:00", 
       "title": "OTCR Legends"
-    }, 
-    {
-      "title": "PennApps"
     }, 
     {
       "start": "2013-01-15T13:00:00-06:00", 

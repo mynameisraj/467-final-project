@@ -46,7 +46,7 @@ form {
 </style>
 <body>
 
-<h1>GET BACK TO WORK</h1>
+<h1>WORKING HARD OR HARDLY WORKING?</h1>
 <script src="d3.v3.min.js"></script>
 <script src="moment.min.js"></script>
 <script>
@@ -59,6 +59,11 @@ function get_color(d) {
   hash[d] = colors[index];
   return colors[index];
 
+}
+
+function get_domain(url) {
+  var domain = url.split(".");
+  return domain[1];
 }
 
 var margin = {top: 40, right: 10, bottom: 10, left: 10},
@@ -87,17 +92,16 @@ d3.json("data_mayank.json", function(error, json) {
   d3.json("calendar_events.json", function(error, json2) {
     if (error) return console.warn(error);
     events = json2["data"];
-    console.log(json2);
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var count = 0;
+      var count = [];
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
-          count++;
+          count.push(history[i]);
         }
       }
-      dictionary["children"].push({"name":events[calevent]['title'], "size":count})
+      dictionary["children"].push({"name":events[calevent]['title'], "size":count.length, "sites":count})
     }
 
     console.log(dictionary);
