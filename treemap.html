@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<title>Working Hard or Hardly Working?</title>
 <style>
 
 html{
   background: #e1e1e1;
-  width: 98%;
-  height: 97%;
 }
 body {
-  font-family: "Intro", "Helvetica", "Arial", "sans-serif";
   margin: auto;
   position: relative;
   width: 960px;
   color: #fff;
 }
 h1{
+  font-family: "Intro", "Helvetica", "Arial", "sans-serif";
   color:#fff;
   font-size: 23px;
   text-align: center;
-  padding-top: 25px;
+  padding-top: 30px;
   margin-bottom: -10px;
   margin-top: -10px;
   background: #282828;
@@ -34,13 +33,15 @@ form {
 
 .node {
   border: solid 1px white;
-  font: 10px sans-serif;
+  font-family: "PT sans";
+  font-size: 11px;
   line-height: 12px;
   overflow: hidden;
   position: absolute;
   text-indent: 2px;
-  padding-top: 5px;
-  position: bottom;
+}
+.event{
+  color: #000000;
 }
 
 </style>
@@ -54,7 +55,7 @@ form {
 var hash = [];
 function get_color(d) {
   if (hash[d] != undefined) { return hash[d]; }
-  var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC"];
+  var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC", "#27A9E1", "#009344", "#262261", "#D6DF23", "#006738"];
   var index = Math.round(Math.random()*(colors.length - 1))
   hash[d] = colors[index];
   return colors[index];
@@ -113,6 +114,7 @@ d3.json("data_mayank.json", function(error, json) {
       .call(position)
       .style("background", function(d) { return d.children ? null : get_color(d.name); })
       .text(function(d) { return d.children ? null : d.name + " (" + d.size + " sites visited)"; });
+
 
   d3.selectAll("input").on("change", function change() {
     var value = this.value === "count"
