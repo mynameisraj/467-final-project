@@ -173,10 +173,9 @@ d3.json("data_mayank.json", function(error, json) {
         .attr("dy", ".35em")
         .attr("fill", "white")
         .attr("text-anchor", "middle")
-        .text(function(d) { return d.name; })
+        .text(function(d) { return d.name + " (" + d.size + ")"; })
         .style("opacity", function(d) { d.w = this.getComputedTextLength(); return 0; });
 
-    d3.select(window).on("click", function() { zoom(root, false); });
 
     d3.select("select").on("change", function() {
       treemap.value(this.value == "size" ? size : count).nodes(root);
