@@ -1,5 +1,9 @@
 467-final-project
 =================
+Usage:
+Open treemap.html in any browser that allows loading .json files (ex. Safari).
+
+The data source is our own browsing histories.
 
 How to get the data from database:
 
