@@ -12,6 +12,11 @@ body {
   width: 960px;
   color: #fff;
 }
+
+#body {
+  margin-top: 10px;
+}
+
 h1{
   font-family: "Intro", "Helvetica", "Arial", "sans-serif";
   color:#fff;
@@ -67,7 +72,7 @@ function get_domain(url) {
   return domain[1];
 }
 
-var w = 1280 - 80,
+var w = 960,
     h = 800 - 180,
     x = d3.scale.linear().range([0, w]),
     y = d3.scale.linear().range([0, h]),
@@ -140,9 +145,9 @@ d3.json("data_mayank.json", function(error, json) {
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
         .on("click", function(d) { return zoom(node == d.parent ? root : d.parent, node == d.parent); });
 
-        cell.filter(function(d) { return (d['event'] ? false : true); })
+    cell.filter(function(d) { return (d['event'] ? false : true); })
         .append("svg:title")
-        .text(function(d) { return d.parent.name; });
+        .text(function(d) { return d.parent.name + " (" + d.parent.children.length + ")"; });
 
     cell.append("svg:rect")
         .attr("width", function(d) { return d.dx - 1; })
@@ -155,7 +160,7 @@ d3.json("data_mayank.json", function(error, json) {
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
-        .style("opacity", function(d) { d.w = this.getComputedTextLength(); return (d['event'] ? 1 : 0); });
+        .style("opacity", function(d) { d.w = this.getComputedTextLength(); return 0; });
 
     d3.select(window).on("click", function() { zoom(root, false); });
 
@@ -189,7 +194,7 @@ function zoom(d, inorout) {
   t.select("text")
       .attr("x", function(d) { return kx * d.dx / 2; })
       .attr("y", function(d) { return ky * d.dy / 2; })
-      .style("opacity", function(d) { return ((kx * d.dx > d.w && !inorout) || d['event']) ? 1 : 0; });
+      .style("opacity", function(d) { return ((kx * d.dx > d.w && !inorout) && !d['event']) ? 1 : 0; });
 
   node = d;
   d3.event.stopPropagation();
