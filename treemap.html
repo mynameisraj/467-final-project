@@ -163,6 +163,7 @@ d3.json("data_mayank.json", function(error, json) {
         .attr("x", function(d) { return d.dx / 2; })
         .attr("y", function(d) { return d.dy / 2; })
         .attr("dy", ".35em")
+        .attr("fill", "white")
         .attr("text-anchor", "middle")
         .text(function(d) { return d.name; })
         .style("opacity", function(d) { d.w = this.getComputedTextLength(); return 0; });
