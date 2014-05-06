@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Working Hard or Hardly Working?</title>
+<link href='http://fonts.googleapis.com/css?family=Squada+One' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+<style>
+
+html{
+  background: #e1e1e1;
+}
+body {
+  margin: auto;
+  position: relative;
+  width: 960px;
+  color: #fff;
+  font-size: 11px;
+  font-family: "PT sans", "Helvetica Neue", "Arial", "sans-serif";
+}
+
+#body {
+
+}
+
+h1{
+  font-family: "Squada One", "Helvetica", "Arial", "sans-serif";
+  color:#fff;
+  font-size: 30px;
+  text-align: center;
+  padding-top: 25px;
+  padding-bottom: 5px;
+  margin-top: -10px;
+  background: #282828;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
+/*.node {
+  border: solid 3px white;
+  font-family: "PT sans";
+  font-size: 11px;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+.node:hover{
+  color: #e5e5e5;
+}*/
+
+</style>
+
+<body>
+<h1 id="title-header">Working Hard or Hardly Working?</h1>
+<div id="body"></div>
+
+<script src="js/d3.v3.min.js"></script>
+<script src="js/moment.min.js"></script>
+<script>
+var hash = [];
+function color(d) {
+  if (hash[d] != undefined) { return hash[d]; }
+  var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC", "#27A9E1", "#009344", "#262261", "#D6DF23", "#006738"];
+  var index = Math.round(Math.random()*(colors.length - 1))
+  hash[d] = colors[index];
+  return colors[index];
+}
+
+function get_domain(url) {
+  var split = url.split("/");
+  var domain = split[2];
+  domain = domain.replace("www.", "");
+  domain = domain.replace(".gov", "");
+  domain = domain.replace(".org", "");
+  domain = domain.replace(".com", "");
+  return domain;
+}
+
+var w = 960,
+    h = 800 - 180,
+    x = d3.scale.linear().range([0, w]),
+    y = d3.scale.linear().range([0, h]),
+    root,
+    node;
+
+var treemap = d3.layout.treemap()
+    .round(false)
+    .size([w, h])
+    .sticky(true)
+    .value(function(d) { return d.size; });
+
+var svg = d3.select("#body").append("div")
+    .attr("class", "chart")
+    .style("width", w + "px")
+    .style("height", h + "px")
+  .append("svg:svg")
+    .attr("width", w)
+    .attr("height", h)
+  .append("svg:g")
+    .attr("transform", "translate(.5,.5)");
+
+var history; // a global
+var events;
+var dictionary = {"name":"Events", "children" : []};
+
+d3.json("data/data_mayank.json", function(error, json) {
+  if (error) return console.warn(error);
+  history = json;
+  d3.json("data/calendar_events.json", function(error, json2) {
+    if (error) return console.warn(error);
+    events = json2["data"];
+    for(var calevent in events){
+      var start = moment(events[calevent]['start']).unix();
+      var end = moment(events[calevent]['end']).unix();
+      var domains_seen = {};
+      var urls = [];
+      for(var i = start; i<end; i++){
+        if(history[i+".0"]){
+          var hist = history[i+".0"];
+          var x = get_domain(hist);
+          if (domains_seen[x]) {
+            domains_seen[x]++;
+          } else {
+            domains_seen[x] = 1;
+          }
+        }
+      }
+      for (var x in domains_seen) {
+        var ob = {
+          "size": domains_seen[x],
+          "name": x
+        };
+        urls.push(ob);
+      }
+      dictionary["children"].push({"name":events[calevent]['title'], "children":urls, "event": true})
+    }
+
+    console.log(dictionary);
+
+    node = root = dictionary;
+
+    var nodes = treemap.nodes(root)
+        .filter(function(d) { return !d.children; });
+
+    var cell = svg.selectAll("g")
+        .data(nodes)
+      .enter().append("svg:g")
+        .attr("class", "cell")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .on("click", function(d) { return zoom(node == d.parent ? root : d.parent, node == d.parent); });
+
+    cell.filter(function(d) { return (d['event'] ? false : true); })
+        .append("svg:title")
+        .text(function(d) { return d.parent.name + " (" + d.parent.children.length + ")"; });
+
+    cell.append("svg:rect")
+        .attr("width", function(d) { return d.dx - 1; })
+        .attr("height", function(d) { return d.dy - 1; })
+        .on("mouseover", function() {d3.select(this).attr("fill", "orange"); })
+        .style("fill", function(d) { return color(d.parent.name);});
+
+    cell.append("svg:text")
+        .attr("x", function(d) { return d.dx / 2; })
+        .attr("y", function(d) { return d.dy / 2; })
+        .attr("dy", ".35em")
+        .attr("fill", "white")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.name + " (" + d.size + ")"; })
+        .style("opacity", function(d) { d.w = this.getComputedTextLength(); return 0; });
+
+
+    d3.select("select").on("change", function() {
+      treemap.value(this.value == "size" ? size : count).nodes(root);
+      zoom(node);
+    });
+  });
+});
+function size(d) {
+  return d.size;
+}
+
+function count(d) {
+  return 1;
+}
+
+function zoom(d, inorout) {
+  var kx = w / d.dx, ky = h / d.dy;
+  x.domain([d.x, d.x + d.dx]);
+  y.domain([d.y, d.y + d.dy]);
+
+  if (d == root) {
+    document.getElementById("title-header").innerHTML =
+        "Working Hard or Hardly Working?";
+  }
+  else {
+    document.getElementById("title-header").innerHTML = 
+        d.name + " (" + d.children.length + " sites)";
+  }
+
+  var t = svg.selectAll("g.cell").transition()
+      .duration(d3.event.altKey ? 7500 : 750)
+      .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+  t.select("rect")
+      .attr("width", function(d) { return kx * d.dx - 1; })
+      .attr("height", function(d) { return ky * d.dy - 1; })
+
+  t.select("text")
+      .attr("x", function(d) { return kx * d.dx / 2; })
+      .attr("y", function(d) { return ky * d.dy / 2; })
+      .style("opacity", function(d) { return ((kx * d.dx > d.w && !inorout) && !d['event']) ? 1 : 0; });
+
+  node = d;
+  d3.event.stopPropagation();
+}
+</script>
+</body>
+</html>
