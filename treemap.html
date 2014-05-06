@@ -59,7 +59,7 @@ form {
 </style>
 
 <body>
-<h1>Working Hard or Hardly Working?</h1>
+<h1 id="title-header">Working Hard or Hardly Working?</h1>
 <div id="body"></div>
 
 <script src="d3.v3.min.js"></script>
@@ -196,6 +196,15 @@ function zoom(d, inorout) {
   var kx = w / d.dx, ky = h / d.dy;
   x.domain([d.x, d.x + d.dx]);
   y.domain([d.y, d.y + d.dy]);
+
+  if (d == root) {
+    document.getElementById("title-header").innerHTML =
+        "Working Hard or Hardly Working?";
+  }
+  else {
+    document.getElementById("title-header").innerHTML = 
+        d.name + " (" + d.children.length + " sites)";
+  }
 
   var t = svg.selectAll("g.cell").transition()
       .duration(d3.event.altKey ? 7500 : 750)
