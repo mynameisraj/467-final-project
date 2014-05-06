@@ -14,10 +14,11 @@ body {
   width: 960px;
   color: #fff;
   font-size: 11px;
+  font-family: "PT sans", "Helvetica Neue", "Arial", "sans-serif";
 }
 
 #body {
-  margin-top: 10px;
+
 }
 
 h1{
@@ -32,6 +33,7 @@ h1{
   width: 100%;
   height: 40px;
   margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 form {
@@ -40,8 +42,9 @@ form {
   top: 10px;
 }
 
-.node {
-  border: solid 1px white;
+
+/*.node {
+  border: solid 3px white;
   font-family: "PT sans";
   font-size: 11px;
   line-height: 12px;
@@ -51,12 +54,12 @@ form {
 }
 .node:hover{
   color: #e5e5e5;
-}
+}*/
 
 </style>
 
 <body>
-<h1>WORKING HARD OR HARDLY WORKING?</h1>
+<h1>Working Hard or Hardly Working?</h1>
 <div id="body"></div>
 
 <script src="d3.v3.min.js"></script>
@@ -161,7 +164,8 @@ d3.json("data_mayank.json", function(error, json) {
     cell.append("svg:rect")
         .attr("width", function(d) { return d.dx - 1; })
         .attr("height", function(d) { return d.dy - 1; })
-        .style("fill", function(d) { return color(d.parent.name); });
+        .on("mouseover", function() {d3.select(this).attr("fill", "orange"); })
+        .style("fill", function(d) { return color(d.parent.name);});
 
     cell.append("svg:text")
         .attr("x", function(d) { return d.dx / 2; })
