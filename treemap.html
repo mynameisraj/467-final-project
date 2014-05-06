@@ -147,17 +147,17 @@ var svg = d3.select("body").append("svg")
     .style("shape-rendering", "crispEdges");
 
 var grandparent = svg.append("g")
-.attr("class", "grandparent");
+    .attr("class", "grandparent");
 
 grandparent.append("rect")
-.attr("y", -margin.top)
-.attr("width", width)
-.attr("height", margin.top);
+    .attr("y", -margin.top)
+    .attr("width", width)
+    .attr("height", margin.top);
 
 grandparent.append("text")
-.attr("x", 6)
-.attr("y", 6 - margin.top)
-.attr("dy", ".75em");
+    .attr("x", 6)
+    .attr("y", 6 - margin.top)
+    .attr("dy", ".75em");
 
 var history; // a global
 var events;
@@ -202,7 +202,6 @@ d3.json("data_mayank.json", function(error, json) {
       var ob_to_push = {
         "name": events[calevent]['title'],
         "children": urls,
-        "fucksgiven": 0
       };
       dictionary["children"].push(ob_to_push);
     }
