@@ -1,0 +1,20 @@
+Raj:
+Worked on the front end. Fetched the Google Calendar data. Developed
+a large amount of the second implementation.
+
+Mayank:
+Worked on the front end. Created the initial implementation of the
+treemap and assisted with the second implementation.
+
+Lisa:
+Helped clean up the front end and stylized it for better readability.
+Provided the color palette for the treemap.
+
+Kavya:
+Created the parser for Google Chrome's browsing history. 
+
+Derek:
+Helped fine tune the parser's output for the front end to read in.
+Assisted with the both implementations of the treemap.
+
+
