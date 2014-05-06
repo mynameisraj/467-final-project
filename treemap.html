@@ -96,13 +96,27 @@ d3.json("data_mayank.json", function(error, json) {
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var count = [];
+      var domains_seen = {};
+      var urls = [];
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
-          count.push(history[i]);
+          var hist = history[i+".0"];
+          var x = get_domain(hist);
+          if (domains_seen[x]) {
+            domains_seen[x]++;
+          } else {
+            domains_seen[x] = 1;
+          }
         }
       }
-      dictionary["children"].push({"name":events[calevent]['title'], "size":count.length, "sites":count})
+      for (var x in domains_seen) {
+        var ob = {
+          "size": domains_seen[x],
+          "name": x
+        };
+        urls.push(ob);
+      }
+      dictionary["children"].push({"name":events[calevent]['title'], "children":urls})
     }
 
     console.log(dictionary);
