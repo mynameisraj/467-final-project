@@ -68,8 +68,13 @@ function color(d) {
 }
 
 function get_domain(url) {
-  var domain = url.split(".");
-  return domain[1];
+  var split = url.split("/");
+  var domain = split[2];
+  domain = domain.replace("www.", "");
+  domain = domain.replace(".gov", "");
+  domain = domain.replace(".org", "");
+  domain = domain.replace(".com", "");
+  return domain;
 }
 
 var w = 960,
