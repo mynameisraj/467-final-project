@@ -4,7 +4,6 @@
 <link href='http://fonts.googleapis.com/css?family=Squada+One' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
 <style>
-
 html{
   background: #e1e1e1;
 }
@@ -15,10 +14,6 @@ body {
   color: #fff;
   font-size: 11px;
   font-family: "PT sans", "Helvetica Neue", "Arial", "sans-serif";
-}
-
-#body {
-
 }
 
 h1{
@@ -41,21 +36,6 @@ form {
   right: 10px;
   top: 10px;
 }
-
-
-/*.node {
-  border: solid 3px white;
-  font-family: "PT sans";
-  font-size: 11px;
-  line-height: 12px;
-  overflow: hidden;
-  position: absolute;
-  text-indent: 2px;
-}
-.node:hover{
-  color: #e5e5e5;
-}*/
-
 </style>
 
 <body>
@@ -65,16 +45,16 @@ form {
 <script src="js/d3.v3.min.js"></script>
 <script src="js/moment.min.js"></script>
 <script>
-var hash = [];
+var colorIndex = [];
 function color(d) {
-  if (hash[d] != undefined) { return hash[d]; }
+  if (colorIndex[d] != undefined) { return colorIndex[d]; }
   var colors = ["#00A99D", "#22B573", "#8CC63F", "#2E3192", "#0071BC", "#27A9E1", "#009344", "#262261", "#D6DF23", "#006738"];
   var index = Math.round(Math.random()*(colors.length - 1))
-  hash[d] = colors[index];
+  colorIndex[d] = colors[index];
   return colors[index];
 }
 
-function get_domain(url) {
+function getDomain(url) {
   var split = url.split("/");
   var domain = split[2];
   domain = domain.replace("www.", "");
@@ -107,35 +87,34 @@ var svg = d3.select("#body").append("div")
   .append("svg:g")
     .attr("transform", "translate(.5,.5)");
 
-var history; // a global
-var events;
+/* Main data source */
 var dictionary = {"name":"Events", "children" : []};
 
 d3.json("data/data_mayank.json", function(error, json) {
   if (error) return console.warn(error);
-  history = json;
+  var history = json;
   d3.json("data/calendar_events.json", function(error, json2) {
     if (error) return console.warn(error);
-    events = json2["data"];
+    var events = json2["data"];
     for(var calevent in events){
       var start = moment(events[calevent]['start']).unix();
       var end = moment(events[calevent]['end']).unix();
-      var domains_seen = {};
+      var domainsSeen = {};
       var urls = [];
       for(var i = start; i<end; i++){
         if(history[i+".0"]){
           var hist = history[i+".0"];
-          var x = get_domain(hist);
-          if (domains_seen[x]) {
-            domains_seen[x]++;
+          var x = getDomain(hist);
+          if (domainsSeen[x]) {
+            domainsSeen[x]++;
           } else {
-            domains_seen[x] = 1;
+            domainsSeen[x] = 1;
           }
         }
       }
-      for (var x in domains_seen) {
+      for (var x in domainsSeen) {
         var ob = {
-          "size": domains_seen[x],
+          "size": domainsSeen[x],
           "name": x
         };
         urls.push(ob);
@@ -143,8 +122,7 @@ d3.json("data/data_mayank.json", function(error, json) {
       dictionary["children"].push({"name":events[calevent]['title'], "children":urls, "event": true})
     }
 
-    console.log(dictionary);
-
+    /* At this point, all data is loaded */
     node = root = dictionary;
 
     var nodes = treemap.nodes(root)
@@ -183,6 +161,7 @@ d3.json("data/data_mayank.json", function(error, json) {
     });
   });
 });
+
 function size(d) {
   return d.size;
 }
@@ -199,8 +178,7 @@ function zoom(d, inorout) {
   if (d == root) {
     document.getElementById("title-header").innerHTML =
         "Working Hard or Hardly Working?";
-  }
-  else {
+  } else {
     document.getElementById("title-header").innerHTML = 
         d.name + " (" + d.children.length + " sites)";
   }
